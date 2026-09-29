@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rayshi.OficialWebSite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #f3f4f6;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 26px;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            margin: 20px 0;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: #334155;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 12px;
+            font-size: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mc-avatar { background: #064e3b; }
+        .roblox-avatar { background: #7f1d1d; }
+        .arcade-avatar { background: #581c87; }
+
+        h1 {
+            color: #f8fafc;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .info-box {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-item {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .info-item strong { color: #f1f5f9; }
+
+        .games-title {
+            margin-top: 12px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .games-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .games-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .game-card {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .game-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .roblox { background: #dc2626; }
+        .minecraft { background: #059669; }
+        .minigame-hub-btn { 
+            background: linear-gradient(135deg, #a855f7, #6366f1); 
+            font-size: 15px;
+            padding: 14px;
+        }
+
+        .btn-action {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back {
+            background: #334155;
+            color: #f1f5f9;
+            cursor: pointer;
+            border: 1px solid #475569;
+            margin-top: 14px;
+        }
+
+        .btn-back:hover { background: #475569; }
+        .btn-official-mc { background: #059669; }
+        .btn-official-roblox { background: #dc2626; }
+
+        /* TAB NAVIGATION MINI GAMES */
+        .arcade-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: transparent;
+            color: #94a3b8;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        .mg-content {
+            display: none;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            min-height: 220px;
+            position: relative;
+        }
+
+        .mg-content.active {
+            display: block;
+        }
+
+        .game-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            padding-right: 32px;
+        }
+
+        .game-hud span strong { color: #38bdf8; }
+
+        .btn-info-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            color: #818cf8;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .btn-info-icon:hover {
+            background: #6366f1;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .btn-start-game {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* MODAL ATURAN GAME */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 380px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .modal-body ul {
+            margin-left: 18px;
+            margin-top: 6px;
+        }
+
+        .modal-body li {
+            margin-bottom: 4px;
+        }
+
+        /* GAME 1: CATCH GEMS */
+        .catch-area {
+            width: 100%;
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #090d16;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            pointer-events: none;
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        /* GAME 2: SPEED CLICKER */
+        .clicker-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border: 4px solid #fca5a5;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            margin: 15px auto 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            box-shadow: 0 6px 0 #991b1b;
+            transition: transform 0.05s, box-shadow 0.05s;
+        }
+
+        .clicker-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #991b1b;
+        }
+
+        /* GAME 3: MEMORY MATCH */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .mem-card {
+            aspect-ratio: 1;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .mem-card.flipped {
+            background: #334155;
+        }
+
+        /* GAME 4: TIC TAC TOE */
+        .ttt-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-right: 32px;
+        }
+
+        .ttt-select {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .ttt-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .ttt-cell {
+            aspect-ratio: 1;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .ttt-cell:hover {
+            background: #334155;
+        }
+
+        /* GAME 5: LIGHTS OUT */
+        .lo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 220px;
+            margin: 10px auto;
+        }
+
+        .lo-cell {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lo-cell.on {
+            background: #facc15;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+            border-color: #fef08a;
+        }
+
+        /* GAME 6: SUDOKU 4x4 */
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            max-width: 220px;
+            margin: 10px auto;
+            background: #334155;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .sdk-cell {
+            aspect-ratio: 1;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #38bdf8;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sdk-cell.given {
+            background: #1e293b;
+            color: #f8fafc;
+            cursor: not-allowed;
+        }
+
+        .sdk-cell.selected {
+            border: 2px solid #818cf8;
+            background: #312e81;
+        }
+
+        .sdk-cell.wrong {
+            color: #f87171;
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        .sdk-num-pad {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .sdk-num-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sdk-num-btn:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="card">
+        
+        <!-- SLIDE 1: UTAMA -->
+        <div id="slide-home" class="slide active">
+            <div class="avatar">🎮</div>
+            <h1>rayshi.OficialWebSite</h1>
+            <div class="badge">Kelas 9.1</div>
+
+            <div class="info-box">
+                <div class="info-item"><strong>Wali Kelas:</strong> Bu Jannah</div>
+                <div class="info-item"><strong>Status:</strong> Siswa Kelas 9 & Gamer</div>
+                <div class="info-item"><strong>Tanggal Lahir:</strong> 25 Agustus 2011</div>
+                <div class="info-item"><strong>Umur:</strong> 15 Tahun</div>
+            </div>
+
+            <div class="games-title">Menu Game & Profil:</div>
+            <div class="games-container">
+                <div class="games-row">
+                    <button onclick="openSlide('slide-roblox')" class="game-card roblox">🔴 Roblox</button>
+                    <button onclick="openSlide('slide-minecraft')" class="game-card minecraft">🟩 Minecraft</button>
+                </div>
+                <button onclick="openSlide('slide-minigames')" class="game-card minigame-hub-btn">🕹️ Mini Games Center</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: ROBLOX DATA -->
+        <div id="slide-roblox" class="slide">
+            <div class="avatar roblox-avatar">🤖</div>
+            <h1>Roblox Zone</h1>
+            <div class="badge" style="background: rgba(220, 38, 38, 0.2); color: #f87171; border-color: rgba(220, 38, 38, 0.3);">Rayhan's Roblox World</div>
+
+            <div class="info-box">
+                <div class="info-item"><strong>Gamer Tag:</strong> RAYSHI_16</div>
+                <div class="info-item"><strong>Map Kesukaan:</strong> Steal an Egg</div>
+            </div>
+
+            <a href="https://www.roblox.com/download" target="_blank" class="btn-action btn-official-roblox">
+                📥 Download / Web Roblox
+            </a>
+            <button onclick="openSlide('slide-home')" class="btn-action btn-back">⬅️ Kembali ke Utama</button>
+        </div>
+
+        <!-- SLIDE 3: MINECRAFT DATA -->
+        <div id="slide-minecraft" class="slide">
+            <div class="avatar mc-avatar">⛏️</div>
+            <h1>Minecraft Zone</h1>
+            <div class="badge" style="background: rgba(5, 150, 105, 0.2); color: #34d399; border-color: rgba(5, 150, 105, 0.3);">Rayhan's Minecraft World</div>
+
+            <div class="info-box">
+                <div class="info-item"><strong>Gamer Tag:</strong> rayshi_nkw</div>
+                <div class="info-item"><strong>Player Type:</strong> Builder & Spear Mace PvP</div>
+            </div>
+
+            <a href="https://www.minecraft.net" target="_blank" class="btn-action btn-official-mc">
+                🌐 Web Resmi Minecraft
+            </a>
+            <button onclick="openSlide('slide-home')" class="btn-action btn-back">⬅️ Kembali ke Utama</button>
+        </div>
+
+        <!-- SLIDE 4: HALAMAN KHUSUS MINI GAMES -->
+        <div id="slide-minigames" class="slide">
+            <div class="avatar arcade-avatar">🎰</div>
+            <h1>Arcade Center</h1>
+            <div class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border-color: rgba(168, 85, 247, 0.3);">Pilih Game Favoritmu</div>
+
+            <div class="arcade-tabs">
+                <button class="tab-btn active" onclick="switchMiniGame('mg-catch', this)">💎 Catch Gems</button>
+                <button class="tab-btn" onclick="switchMiniGame('mg-clicker', this)">⚡ Speed Tap</button>
+                <button class="tab-btn" onclick="switchMiniGame('mg-memory', this)">🃏 Memory</button>
+                <button class="tab-btn" onclick="switchMiniGame('mg-ttt', this)">❌ Tic Tac Toe</button>
+                <button class="tab-btn" onclick="switchMiniGame('mg-lo', this)">💡 Lights Out</button>
+                <button class="tab-btn" onclick="switchMiniGame('mg-sdk', this)">🧩 Sudoku</button>
+            </div>
+
+            <!-- GAME 1: CATCH GEMS -->
+            <div id="mg-catch" class="mg-content active">
+                <button class="btn-info-icon" onclick="showInfo('catch')" title="Aturan Game">ℹ️</button>
+                <div class="game-hud">
+                    <span>Skor: <strong id="c-score">0</strong></span>
+                    <span>Waktu: <strong id="c-timer">20</strong>s</span>
+                    <button class="btn-start-game" id="c-start" onclick="startCatchGame()">Mulai 🎮</button>
+                </div>
+                <div class="catch-area" id="catchArea">
+                    <div class="basket" id="basket">🛒</div>
+                </div>
+            </div>
+
+            <!-- GAME 2: SPEED CLICKER -->
+            <div id="mg-clicker" class="mg-content">
+                <button class="btn-info-icon" onclick="showInfo('clicker')" title="Aturan Game">ℹ️</button>
+                <div class="game-hud">
+                    <span>Klik: <strong id="tap-score">0</strong></span>
+                    <span>Sisa Waktu: <strong id="tap-timer">10</strong>s</span>
+                    <button class="btn-start-game" id="tap-start" onclick="startTapGame()">Mulai ⚡</button>
+                </div>
+                <div class="clicker-btn" id="tapBtn" onclick="registerTap()">TAP!</div>
+            </div>
+
+            <!-- GAME 3: MEMORY MATCH -->
+            <div id="mg-memory" class="mg-content">
+                <button class="btn-info-icon" onclick="showInfo('memory')" title="Aturan Game">ℹ️</button>
+                <div class="game-hud">
+                    <span>Status: <strong id="mem-status">Siap Main</strong></span>
+                    <button class="btn-start-game" onclick="initMemoryGame()">Acak Kartu 🔄</button>
+                </div>
+                <div class="memory-grid" id="memGrid"></div>
+            </div>
+
+            <!-- GAME 4: TIC TAC TOE VS AI -->
+            <div id="mg-ttt" class="mg-content">
+                <button class="btn-info-icon" onclick="showInfo('ttt')" title="Aturan Game">ℹ️</button>
+                <div class="ttt-controls">
+                    <select id="ttt-difficulty" class="ttt-select">
+                        <option value="easy">Level: Easy</option>
+                        <option value="medium">Level: Medium</option>
+                        <option value="hard">Level: Hard</option>
+                    </select>
+                    <button class="btn-start-game" onclick="resetTTT()">Reset 🔄</button>
+                </div>
+                <div class="game-hud" style="justify-content: center; padding-right: 0;">
+                    <span id="ttt-status" style="color: #cbd5e1;">Giliran Kamu (❌)</span>
+                </div>
+                <div class="ttt-grid" id="tttGrid"></div>
+            </div>
+
+            <!-- GAME 5: LIGHTS OUT -->
+            <div id="mg-lo" class="mg-content">
+                <button class="btn-info-icon" onclick="showInfo('lo')" title="Aturan Game">ℹ️</button>
+                <div class="game-hud">
+                    <span>Langkah: <strong id="lo-moves">0</strong></span>
+                    <button class="btn-start-game" onclick="initLightsOut()">Acak Ulang 🔄</button>
+                </div>
+                <div class="game-hud" style="justify-content: center; padding-right: 0;">
+                    <span id="lo-status" style="color: #cbd5e1;">Padamkan semua lampu!</span>
+                </div>
+                <div class="lo-grid" id="loGrid"></div>
+            </div>
+
+            <!-- GAME 6: SUDOKU 4x4 -->
+            <div id="mg-sdk" class="mg-content">
+                <button class="btn-info-icon" onclick="showInfo('sdk')" title="Aturan Game">ℹ️</button>
+                <div class="game-hud">
+                    <span>Salah: <strong id="sdk-mistakes" style="color: #f87171;">0/3</strong></span>
+                    <button class="btn-start-game" onclick="initSudoku()">Game Baru 🔄</button>
+                </div>
+                <div class="sudoku-grid" id="sdkGrid"></div>
+                <div class="sdk-num-pad">
+                    <button class="sdk-num-btn" onclick="inputSudokuNumber(1)">1</button>
+                    <button class="sdk-num-btn" onclick="inputSudokuNumber(2)">2</button>
+                    <button class="sdk-num-btn" onclick="inputSudokuNumber(3)">3</button>
+                    <button class="sdk-num-btn" onclick="inputSudokuNumber(4)">4</button>
+                    <button class="sdk-num-btn" onclick="inputSudokuNumber(0)">🗑️</button>
+                </div>
+            </div>
+
+            <button onclick="openSlide('slide-home')" class="btn-action btn-back">⬅️ Kembali ke Utama</button>
+        </div>
+
+    </div>
+
+    <!-- MODAL PENJELASAN GAME -->
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Aturan Game</div>
+                <button class="modal-close" onclick="closeInfo()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Konten dinamis dari JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Slide Navigation
+        function openSlide(slideId) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(slideId).classList.add('active');
+            if (slideId === 'slide-minigames') {
+                initMemoryGame();
+                resetTTT();
+                initLightsOut();
+                initSudoku();
+            }
+        }
+
+        // Background Particles
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const mouse = { x: null, y: null, radius: 120 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.color = Math.random() > 0.5 ? '#818cf8' : '#38bdf8';
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    let angle = Math.atan2(dy, dx);
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= Math.cos(angle) * force * 4;
+                    this.y -= Math.sin(angle) * force * 4;
+                }
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numberOfParticles = Math.floor((canvas.width * canvas.height) / 9000);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].draw();
+                particles[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+
+        // TAB SYSTEM FOR MINI GAMES
+        function switchMiniGame(gameId, btn) {
+            document.querySelectorAll('.mg-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(gameId).classList.add('active');
+            btn.classList.add('active');
+            if (gameId === 'mg-ttt') resetTTT();
+            if (gameId === 'mg-lo') initLightsOut();
+            if (gameId === 'mg-sdk') initSudoku();
+        }
+
+        // MODAL INFO GAME SYSTEM
+        const gameRules = {
+            catch: {
+                title: "💎 Catch Gems - Aturan",
+                body: "Game ketangkasan mengumpulkan permata yang jatuh!<br><br><b>Cara Bermain:</b><ul><li>Geser keranjang (🛒) menggunakan kursor/jari kamu.</li><li>Tangkap 💎 (Gems) = <b>+1 Poin</b>.</li><li>Tangkap ⭐ (Bintang) = <b>+2 Poin</b>.</li><li>Hindari 💣 (Bom) = <b>-3 Poin</b>.</li><li>Kumpulkan poin sebanyak-banyaknya dalam <b>20 detik</b>!</li></ul>"
+            },
+            clicker: {
+                title: "⚡ Speed Tap - Aturan",
+                body: "Uji kecepatan jarimu dalam melakukan tap/klik!<br><br><b>Cara Bermain:</b><ul><li>Klik tombol <b>Mulai</b> untuk mengaktifkan timer 10 detik.</li><li>Tekan/klik tombol <b>TAP!</b> selaju mungkin.</li><li>Raih rekor jumlah klik terbanyak sebelum waktu habis!</li></ul>"
+            },
+            memory: {
+                title: "🃏 Memory Match - Aturan",
+                body: "Game mengasah ingatan visual.<br><br><b>Cara Bermain:</b><ul><li>Klik pada kartu bertanda ❓ untuk membukanya.</li><li>Buka 2 kartu secara berurutan. Jika gambarnya sama, kartu akan tetap terbuka.</li><li>Jika berbeda, kartu akan tertutup kembali.</li><li>Selesaikan semua pasangan kartu dengan langkah sesedikit mungkin!</li></ul>"
+            },
+            ttt: {
+                title: "❌ Tic Tac Toe - Aturan",
+                body: "Adu strategi melawan Bot AI kecerdasan buatan!<br><br><b>Cara Bermain:</b><ul><li>Kamu bertindak sebagai tanda ❌ dan AI sebagai ⭕.</li><li>Pilih tingkat kesulitan: Easy, Medium, atau Hard.</li><li>Pemenangnya adalah yang pertama kali berhasil menyusun 3 tanda sejajar (Horizontal, Vertikal, atau Diagonal).</li></ul>"
+            },
+            lo: {
+                title: "💡 Lights Out - Aturan",
+                body: "Puzzle logika memadamkan seluruh lampu di papan.<br><br><b>Cara Bermain:</b><ul><li>Klik pada salah satu kotak lampu untuk mengubah statusnya (Nyala/Mati).</li><li><b>Penting:</b> Setiap kali kamu mengeklik lampu, lampu tersebut beserta lampu tetangganya (Atas, Bawah, Kiri, Kanan) akan ikut berganti status!</li><li>Tujuanmu adalah membuat <b>seluruh papan menjadi gelap/padam</b>.</li></ul>"
+            },
+            sdk: {
+                title: "🧩 Mini Sudoku (4x4) - Aturan",
+                body: "Teka-teki logika angka klasik versi mini.<br><br><b>Cara Bermain:</b><ul><li>Isi kotak kosong dengan angka <b>1 sampai 4</b>.</li><li>Aturan: Setiap baris, kolom, dan sub-kotak (2x2) tidak boleh memiliki angka yang sama/kembar!</li><li>Pilih kotak kosong, lalu tekan tombol angka di bawah untuk memasukkan nilai.</li><li>Gunakan tombol 🗑️ untuk menghapus angka. Batas kesalahan maksimum adalah 3x.</li></ul>"
+            }
+        };
+
+        function showInfo(gameKey) {
+            const rule = gameRules[gameKey];
+            if (rule) {
+                document.getElementById('modalTitle').innerHTML = rule.title;
+                document.getElementById('modalBody').innerHTML = rule.body;
+                document.getElementById('infoModal').classList.add('active');
+            }
+        }
+
+        function closeInfo() {
+            document.getElementById('infoModal').classList.remove('active');
+        }
+
+        // GAME 1: CATCH GEMS LOGIC
+        const catchArea = document.getElementById('catchArea');
+        const basket = document.getElementById('basket');
+        let cScore = 0, cTime = 20, cActive = false, cTimerInterval, cSpawnInterval, basketX = 50;
+
+        function moveBasket(clientX) {
+            const rect = catchArea.getBoundingClientRect();
+            let x = clientX - rect.left;
+            x = Math.max(15, Math.min(rect.width - 15, x));
+            basketX = x;
+            basket.style.left = `${x}px`;
+        }
+
+        catchArea.addEventListener('mousemove', (e) => { if(cActive) moveBasket(e.clientX); });
+        catchArea.addEventListener('touchmove', (e) => { if(cActive && e.touches[0]) moveBasket(e.touches[0].clientX); });
+
+        function startCatchGame() {
+            if(cActive) return;
+            cScore = 0; cTime = 20; cActive = true;
+            document.getElementById('c-score').innerText = cScore;
+            document.getElementById('c-timer').innerText = cTime;
+            document.getElementById('c-start').style.display = 'none';
+
+            cTimerInterval = setInterval(() => {
+                cTime--;
+                document.getElementById('c-timer').innerText = cTime;
+                if(cTime <= 0) endCatchGame();
+            }, 1000);
+
+            cSpawnInterval = setInterval(spawnGem, 500);
+        }
+
+        function spawnGem() {
+            if(!cActive) return;
+            const item = document.createElement('div');
+            item.classList.add('falling-item');
+            const types = ['💎', '⭐', '💣'];
+            const rand = types[Math.floor(Math.random() * types.length)];
+            item.innerText = rand;
+
+            const areaW = catchArea.clientWidth;
+            item.style.left = `${Math.random() * (areaW - 20) + 10}px`;
+            item.style.top = '0px';
+            catchArea.appendChild(item);
+
+            let itemY = 0;
+            const speed = Math.random() * 2 + 2;
+            const fall = setInterval(() => {
+                if(!cActive) { clearInterval(fall); item.remove(); return; }
+                itemY += speed;
+                item.style.top = `${itemY}px`;
+
+                if (itemY >= 130 && itemY <= 150) {
+                    const itemX = parseFloat(item.style.left);
+                    if (Math.abs(itemX - basketX) < 25) {
+                        cScore += (rand === '💣') ? -3 : (rand === '⭐' ? 2 : 1);
+                        document.getElementById('c-score').innerText = Math.max(0, cScore);
+                        clearInterval(fall);
+                        item.remove();
+                    }
+                }
+                if (itemY > 155) { clearInterval(fall); item.remove(); }
+            }, 20);
+        }
+
+        function endCatchGame() {
+            cActive = false;
+            clearInterval(cTimerInterval);
+            clearInterval(cSpawnInterval);
+            document.querySelectorAll('.falling-item').forEach(el => el.remove());
+            alert(`Waktu Habis! Skor kamu: ${cScore}`);
+            const btn = document.getElementById('c-start');
+            btn.style.display = 'inline-block';
+            btn.innerText = 'Main Lagi 🔄';
+        }
+
+        // GAME 2: SPEED TAP LOGIC
+        let tapScore = 0, tapTime = 10, tapActive = false, tapTimerInterval;
+
+        function startTapGame() {
+            if(tapActive) return;
+            tapScore = 0; tapTime = 10; tapActive = true;
+            document.getElementById('tap-score').innerText = tapScore;
+            document.getElementById('tap-timer').innerText = tapTime;
+            document.getElementById('tap-start').style.display = 'none';
+
+            tapTimerInterval = setInterval(() => {
+                tapTime--;
+                document.getElementById('tap-timer').innerText = tapTime;
+                if(tapTime <= 0) {
+                    tapActive = false;
+                    clearInterval(tapTimerInterval);
+                    alert(`Hebat! Kamu berhasil melakukan ${tapScore} tap dalam 10 detik!`);
+                    const btn = document.getElementById('tap-start');
+                    btn.style.display = 'inline-block';
+                    btn.innerText = 'Coba Lagi 🔄';
+                }
+            }, 1000);
+        }
+
+        function registerTap() {
+            if(tapActive) {
+                tapScore++;
+                document.getElementById('tap-score').innerText = tapScore;
+            }
+        }
+
+        // GAME 3: MEMORY MATCH LOGIC
+        const icons = ['⚔️', '🛡️', '💎', '🔥', '⚔️', '🛡️', '💎', '🔥'];
+        let flippedCards = [], matchedPairs = 0;
+
+        function initMemoryGame() {
+            const grid = document.getElementById('memGrid');
+            grid.innerHTML = '';
+            flippedCards = [];
+            matchedPairs = 0;
+            document.getElementById('mem-status').innerText = 'Cari Pasangan!';
+            const shuffled = [...icons].sort(() => 0.5 - Math.random());
+
+            shuffled.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.classList.add('mem-card');
+                card.dataset.icon = icon;
+                card.dataset.index = index;
+                card.innerText = '❓';
+                card.onclick = () => flipMemoryCard(card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipMemoryCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                card.innerText = card.dataset.icon;
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMemoryMatch, 600);
+                }
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.icon === c2.dataset.icon) {
+                matchedPairs++;
+                if (matchedPairs === 4) {
+                    document.getElementById('mem-status').innerText = 'Menang! 🎉';
+                }
+            } else {
+                c1.classList.remove('flipped');
+                c1.innerText = '❓';
+                c2.classList.remove('flipped');
+                c2.innerText = '❓';
+            }
+            flippedCards = [];
+        }
+
+        // GAME 4: TIC TAC TOE LOGIC
+        let tttBoard = ['', '', '', '', '', '', '', '', ''];
+        let tttGameActive = true;
+        const huPlayer = '❌';
+        const aiPlayer = '⭕';
+        const winConditions = [
+            [0,1,2], [3,4,5], [6,7,8],
+            [0,3,6], [1,4,7], [2,5,8],
+            [0,4,8], [2,4,6]
+        ];
+
+        function resetTTT() {
+            tttBoard = ['', '', '', '', '', '', '', '', ''];
+            tttGameActive = true;
+            document.getElementById('ttt-status').innerText = 'Giliran Kamu (❌)';
+            document.getElementById('ttt-status').style.color = '#cbd5e1';
+            
+            const grid = document.getElementById('tttGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('ttt-cell');
+                cell.dataset.index = i;
+                cell.onclick = () => handleCellClick(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(index) {
+            if (tttBoard[index] !== '' || !tttGameActive) return;
+
+            makeMove(index, huPlayer);
+
+            if (checkWin(tttBoard, huPlayer)) {
+                document.getElementById('ttt-status').innerText = 'Kamu Menang! 🎉';
+                document.getElementById('ttt-status').style.color = '#4ade80';
+                tttGameActive = false;
+                return;
+            }
+
+            if (checkTie(tttBoard)) {
+                document.getElementById('ttt-status').innerText = 'Hasil Seri! 🤝';
+                document.getElementById('ttt-status').style.color = '#facc15';
+                tttGameActive = false;
+                return;
+            }
+
+            document.getElementById('ttt-status').innerText = 'AI Berpikir... 🤖';
+            tttGameActive = false;
+
+            setTimeout(() => {
+                aiTurn();
+            }, 400);
+        }
+
+        function makeMove(index, player) {
+            tttBoard[index] = player;
+            const cell = document.querySelectorAll('.ttt-cell')[index];
+            cell.innerText = player;
+            cell.style.color = player === huPlayer ? '#f87171' : '#38bdf8';
+        }
+
+        function aiTurn() {
+            const diff = document.getElementById('ttt-difficulty').value;
+            let move;
+
+            if (diff === 'easy') {
+                move = getRandomMove();
+            } else if (diff === 'medium') {
+                move = Math.random() < 0.5 ? getBestMove() : getRandomMove();
+            } else {
+                move = getBestMove();
+            }
+
+            if (move !== undefined) {
+                makeMove(move, aiPlayer);
+
+                if (checkWin(tttBoard, aiPlayer)) {
+                    document.getElementById('ttt-status').innerText = 'AI Menang! 🤖';
+                    document.getElementById('ttt-status').style.color = '#f87171';
+                    return;
+                }
+
+                if (checkTie(tttBoard)) {
+                    document.getElementById('ttt-status').innerText = 'Hasil Seri! 🤝';
+                    document.getElementById('ttt-status').style.color = '#facc15';
+                    return;
+                }
+            }
+
+            tttGameActive = true;
+            document.getElementById('ttt-status').innerText = 'Giliran Kamu (❌)';
+        }
+
+        function getRandomMove() {
+            let emptyIndex = [];
+            tttBoard.forEach((val, idx) => {
+                if (val === '') emptyIndex.push(idx);
+            });
+            if (emptyIndex.length === 0) return undefined;
+            return emptyIndex[Math.floor(Math.random() * emptyIndex.length)];
+        }
+
+        function checkWin(board, player) {
+            return winConditions.some(condition => {
+                return condition.every(index => board[index] === player);
+            });
+        }
+
+        function checkTie(board) {
+            return board.every(cell => cell !== '');
+        }
+
+        function getBestMove() {
+            let bestScore = -Infinity;
+            let move;
+            for (let i = 0; i < 9; i++) {
+                if (tttBoard[i] === '') {
+                    tttBoard[i] = aiPlayer;
+                    let score = minimax(tttBoard, 0, false);
+                    tttBoard[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+            return move;
+        }
+
+        function minimax(board, depth, isMaximizing) {
+            if (checkWin(board, aiPlayer)) return 10 - depth;
+            if (checkWin(board, huPlayer)) return depth - 10;
+            if (checkTie(board)) return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = aiPlayer;
+                        let score = minimax(board, depth + 1, false);
+                        board[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = huPlayer;
+                        let score = minimax(board, depth + 1, true);
+                        board[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        // GAME 5: LIGHTS OUT LOGIC
+        let loBoard = Array(16).fill(false);
+        let loMoves = 0;
+
+        function initLightsOut() {
+            loBoard = Array(16).fill(false);
+            loMoves = 0;
+            document.getElementById('lo-moves').innerText = loMoves;
+            document.getElementById('lo-status').innerText = 'Padamkan semua lampu!';
+            document.getElementById('lo-status').style.color = '#cbd5e1';
+
+            for(let i = 0; i < 8; i++) {
+                let randIndex = Math.floor(Math.random() * 16);
+                toggleLO(randIndex, false);
+            }
+
+            renderLO();
+        }
+
+        function toggleLO(index, countMove = true) {
+            const row = Math.floor(index / 4);
+            const col = index % 4;
+
+            const targets = [
+                [row, col],
+                [row - 1, col],
+                [row + 1, col],
+                [row, col - 1],
+                [row, col + 1]
+            ];
+
+            targets.forEach(([r, c]) => {
+                if (r >= 0 && r < 4 && c >= 0 && c < 4) {
+                    let idx = r * 4 + c;
+                    loBoard[idx] = !loBoard[idx];
+                }
+            });
+
+            if(countMove) {
+                loMoves++;
+                document.getElementById('lo-moves').innerText = loMoves;
+            }
+
+            renderLO();
+
+            if (countMove && loBoard.every(val => !val)) {
+                document.getElementById('lo-status').innerText = 'Menang! Semua Padam! 🎉';
+                document.getElementById('lo-status').style.color = '#4ade80';
+            }
+        }
+
+        function renderLO() {
+            const grid = document.getElementById('loGrid');
+            grid.innerHTML = '';
+            loBoard.forEach((isOn, idx) => {
+                const cell = document.createElement('div');
+                cell.classList.add('lo-cell');
+                if (isOn) cell.classList.add('on');
+                cell.onclick = () => toggleLO(idx, true);
+                grid.appendChild(cell);
+            });
+        }
+
+        // GAME 6: SUDOKU 4x4 LOGIC
+        const sdkPuzzles = [
+            {
+                initial: [1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 2],
+                solution: [1, 3, 2, 4, 2, 4, 1, 3, 4, 2, 3, 1, 3, 1, 4, 2]
+            },
+            {
+                initial: [0, 2, 4, 0, 1, 0, 0, 3, 4, 0, 0, 2, 0, 1, 3, 0],
+                solution: [3, 2, 4, 1, 1, 4, 2, 3, 4, 3, 1, 2, 2, 1, 3, 4]
+            }
+        ];
+
+        let sdkCurrent = [];
+        let sdkSolution = [];
+        let sdkGiven = [];
+        let sdkSelectedCell = null;
+        let sdkMistakes = 0;
+
+        function initSudoku() {
+            const randP = sdkPuzzles[Math.floor(Math.random() * sdkPuzzles.length)];
+            sdkCurrent = [...randP.initial];
+            sdkGiven = randP.initial.map(v => v !== 0);
+            sdkSolution = [...randP.solution];
+            sdkSelectedCell = null;
+            sdkMistakes = 0;
+            document.getElementById('sdk-mistakes').innerText = `${sdkMistakes}/3`;
+
+            renderSudoku();
+        }
+
+        function renderSudoku() {
+            const grid = document.getElementById('sdkGrid');
+            grid.innerHTML = '';
+
+            sdkCurrent.forEach((val, idx) => {
+                const cell = document.createElement('div');
+                cell.classList.add('sdk-cell');
+                if (sdkGiven[idx]) cell.classList.add('given');
+                if (sdkSelectedCell === idx) cell.classList.add('selected');
+                
+                if (val !== 0) {
+                    cell.innerText = val;
+                    if (!sdkGiven[idx] && val !== sdkSolution[idx]) {
+                        cell.classList.add('wrong');
+                    }
+                }
+
+                cell.onclick = () => {
+                    if (!sdkGiven[idx]) {
+                        sdkSelectedCell = idx;
+                        renderSudoku();
+                    }
+                };
+
+                grid.appendChild(cell);
+            });
+        }
+
+        function inputSudokuNumber(num) {
+            if (sdkSelectedCell === null || sdkGiven[sdkSelectedCell]) return;
+
+            if (num !== 0 && num !== sdkSolution[sdkSelectedCell]) {
+                sdkMistakes++;
+                document.getElementById('sdk-mistakes').innerText = `${sdkMistakes}/3`;
+                if (sdkMistakes >= 3) {
+                    alert('Gagal! Kamu salah 3 kali. Coba lagi!');
+                    initSudoku();
+                    return;
+                }
+            }
+
+            sdkCurrent[sdkSelectedCell] = num;
+            renderSudoku();
+
+            if (sdkCurrent.join('') === sdkSolution.join('')) {
+                alert('Selamat! Kamu berhasil menyelesaikan Sudoku! 🎉');
+            }
+        }
+    </script>
+</body>
+</html>
